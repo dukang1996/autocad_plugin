@@ -1,57 +1,57 @@
-Attribute VB_Name = "Ä£¿é1"
-'¶¨Òå¹«¹²±äÁ¿
-Public ssetofRegion As AcadSelectionSet    'ÓÃÓÚ±£´æĞŞ¸Ä·¶Î§
-Public objName As String  'ÓÃÓÚ±£´æÏîÄ¿Ãû³Æ
-Public sumBR As Integer   'ÓÃÓÚ±£´æ×ÜÒ³Êı
+Attribute VB_Name = "æ¨¡å—1"
+'å®šä¹‰å…¬å…±å˜é‡
+Public ssetofRegion As AcadSelectionSet    'ç”¨äºä¿å­˜ä¿®æ”¹èŒƒå›´
+Public objName As String  'ç”¨äºä¿å­˜é¡¹ç›®åç§°
+Public sumBR As Integer   'ç”¨äºä¿å­˜æ€»é¡µæ•°
 
 Public Sub demo1()
-    Dim objBR As AcadBlockReference  '¶¨ÒåÒ»¸ö¿é²ÎÕÕ
-    Dim sset As AcadSelectionSet '¶¨ÒåÒ»¸öÑ¡Ôñ¼¯
-    Dim fType(2) As Integer  '¶¨ÒåÒ»¸öÊı×é£¬ÓÃÓÚÉ¸Ñ¡Ñ¡Ôñ¼¯
-    Dim fData(2) As Variant '¶¨ÒåÒ»¸öÊı×é£¬ÓÃÓÚÉ¸Ñ¡Ñ¡Ôñ¼¯
+    Dim objBR As AcadBlockReference  'å®šä¹‰ä¸€ä¸ªå—å‚ç…§
+    Dim sset As AcadSelectionSet 'å®šä¹‰ä¸€ä¸ªé€‰æ‹©é›†
+    Dim fType(2) As Integer  'å®šä¹‰ä¸€ä¸ªæ•°ç»„ï¼Œç”¨äºç­›é€‰é€‰æ‹©é›†
+    Dim fData(2) As Variant 'å®šä¹‰ä¸€ä¸ªæ•°ç»„ï¼Œç”¨äºç­›é€‰é€‰æ‹©é›†
     Dim offsety As Integer
     Dim offsetX As Integer
     Dim ptmin As Variant
     Dim ptmax As Variant
 
-    Set sset = creatSSet("poltSSet")  'ÉèÖÃÒ»¸öÃûÎªpoleSSetµÄÑ¡Ôñ¼¯
+    Set sset = creatSSet("poltSSet")  'è®¾ç½®ä¸€ä¸ªåä¸ºpoleSSetçš„é€‰æ‹©é›†
 
-    fType(0) = 8: fData(0) = "puresino-Í¼¿òÍ¼Ç©"   'ÉèÖÃÍ¼²ã
-    fType(1) = 100: fData(1) = "AcDbBlockReference" 'É¸Ñ¡Í¼ÔªÀàĞÍÎª¿é²ÎÕÕ
-    fType(2) = 2: fData(2) = "puresino-Í¼¿òÍ¼Ç©" 'É¸Ñ¡¿é²ÎÕÕÃû³ÆÎªpuresino-Í¼¿òÍ¼Ç©
-    sset.SelectOnScreen fType, fData 'Ñ¡ÔñËùÓĞÍ¼Ôª
+    fType(0) = 8: fData(0) = "puresino-å›¾æ¡†å›¾ç­¾"   'è®¾ç½®å›¾å±‚
+    fType(1) = 100: fData(1) = "AcDbBlockReference" 'ç­›é€‰å›¾å…ƒç±»å‹ä¸ºå—å‚ç…§
+    fType(2) = 2: fData(2) = "puresino-å›¾æ¡†å›¾ç­¾" 'ç­›é€‰å—å‚ç…§åç§°ä¸ºpuresino-å›¾æ¡†å›¾ç­¾
+    sset.SelectOnScreen fType, fData 'é€‰æ‹©æ‰€æœ‰å›¾å…ƒ
 
-    '»ñÈ¡Æ«ÒÆÁ¿
+    'è·å–åç§»é‡
     Set objBR = sset.Item(0)
     objBR.GetBoundingBox ptmin, ptmax
     offsety = Abs(ptmax(1) - ptmin(1))
     offsetX = Abs(ptmax(0) - ptmin(0))
 
-    'µÃµ½°üº¬ËùÓĞ¿é²ÎÕÕºÍ²åÈëµã×ø±êµÄÊı×é
+    'å¾—åˆ°åŒ…å«æ‰€æœ‰å—å‚ç…§å’Œæ’å…¥ç‚¹åæ ‡çš„æ•°ç»„
     Dim objBRarr() As Variant
-    ReDim objBRarr(0 To (sset.Count - 1), 0 To 1) '¶¨ÒåÒ»¸öÁ½Î¬Êı×é
+    ReDim objBRarr(0 To (sset.Count - 1), 0 To 1) 'å®šä¹‰ä¸€ä¸ªä¸¤ç»´æ•°ç»„
     Dim i As Integer
     i = 0
     For Each objBR In sset
-        Set objBRarr(i, 0) = objBR  '½«¿é²ÎÕÕ·ÅÔÚµÚÒ»ÁĞ
-        objBRarr(i, 1) = objBR.InsertionPoint '½«²åÈëµã×ø±ê·ÅÔÚµÚ¶şÁĞ
+        Set objBRarr(i, 0) = objBR  'å°†å—å‚ç…§æ”¾åœ¨ç¬¬ä¸€åˆ—
+        objBRarr(i, 1) = objBR.InsertionPoint 'å°†æ’å…¥ç‚¹åæ ‡æ”¾åœ¨ç¬¬äºŒåˆ—
         i = i + 1
     Next
 
     sset.Delete
 
-    '°´×ø±êÅÅĞò
+    'æŒ‰åæ ‡æ’åº
     sortBRATTyx objBRarr, offsety
 
-    '¸ü¸ÄÍ¼ÔªÊôĞÔ
+    'æ›´æ”¹å›¾å…ƒå±æ€§
     Dim blockATT As Variant
 
-    For i = 0 To UBound(objBRarr)  '±éÀúÑ¡Ôñ¼¯
-        blockATT = objBRarr(i, 0).GetAttributes '»ñÈ¡²ÎÕÕ¿ìµÄÊôĞÔ
-        blockATT(8).TextString = UBound(objBRarr) + 1 'ĞŞ¸Ä×ÜÒ³ÊıÎª
-        blockATT(9).TextString = i + 1 'ĞŞ¸ÄÒ³ÊıÎªi
+    For i = 0 To UBound(objBRarr)  'éå†é€‰æ‹©é›†
+        blockATT = objBRarr(i, 0).GetAttributes 'è·å–å‚ç…§å¿«çš„å±æ€§
+        blockATT(8).TextString = UBound(objBRarr) + 1 'ä¿®æ”¹æ€»é¡µæ•°ä¸º
+        blockATT(9).TextString = i + 1 'ä¿®æ”¹é¡µæ•°ä¸ºi
         If i < 10 Then
-            blockATT(13).TextString = "QP-DY-0" & i + 1 'ĞŞ¸ÄÍ¼ºÅÎªQP-DY-0i
+            blockATT(13).TextString = "QP-DY-0" & i + 1 'ä¿®æ”¹å›¾å·ä¸ºQP-DY-0i
         Else
             blockATT(13).TextString = "QP-DY-" & i + 1
         End If
@@ -62,26 +62,26 @@ End Sub
 
 
 
-'´´½¨Ñ¡Ôñ¼¯º¯Êı
+'åˆ›å»ºé€‰æ‹©é›†å‡½æ•°
 Public Function creatSSet(ByVal SSetName As String) As AcadSelectionSet
     Dim sset As AcadSelectionSet
     Dim i As Integer
     For i = 0 To ThisDrawing.SelectionSets.Count - 1
         Set sset = ThisDrawing.SelectionSets.Item(i)
-        If StrComp(sset.Name, SSetName, vbTextCompare) = 0 Then 'Èç¹û´´½¨µÄÑ¡Ôñ¼¯ºÍÒÑÓĞµÄÑ¡Ôñ¼¯ÖØÃû
+        If StrComp(sset.Name, SSetName, vbTextCompare) = 0 Then 'å¦‚æœåˆ›å»ºçš„é€‰æ‹©é›†å’Œå·²æœ‰çš„é€‰æ‹©é›†é‡å
             sset.Delete
             Exit For
         End If
     Next i
     Set creatSSet = ThisDrawing.SelectionSets.Add(SSetName)
 End Function
-'Êı×éÅÅĞò£¬ÏÈĞĞºóÁĞ
+'æ•°ç»„æ’åºï¼Œå…ˆè¡Œååˆ—
 Public Function sortBRATTyx(ByRef objarr() As Variant, ByVal offsety)
     Dim i As Integer
     Dim j As Integer
     Dim objArrTemp As AcadBlockReference
     Dim ptInsert As Variant
-    'yÖáÅÅĞò
+    'yè½´æ’åº
     For i = 0 To UBound(objarr) - 1
         For j = i + 1 To UBound(objarr)
             If objarr(i, 1)(1) < objarr(j, 1)(1) Then
@@ -94,7 +94,7 @@ Public Function sortBRATTyx(ByRef objarr() As Variant, ByVal offsety)
             End If
         Next j
     Next i
-    '¶ş´ÎÅÅĞò
+    'äºŒæ¬¡æ’åº
     For i = 0 To UBound(objarr) - 1
         For j = i + 1 To UBound(objarr)
             If Abs(objarr(i, 1)(1) - objarr(j, 1)(1)) < offsety And objarr(i, 1)(0) > objarr(j, 1)(0) Then
@@ -110,13 +110,13 @@ Public Function sortBRATTyx(ByRef objarr() As Variant, ByVal offsety)
 
 End Function
 
-'Êı×éÅÅĞò£¬ÏÈÁĞºóĞĞ
+'æ•°ç»„æ’åºï¼Œå…ˆåˆ—åè¡Œ
 Public Function sortBRATTxy(ByRef objarr() As Variant, ByVal offsety)
     Dim i As Integer
     Dim j As Integer
     Dim objArrTemp As AcadBlockReference
     Dim ptInsert As Variant
-    'xÖáÅÅĞò
+    'xè½´æ’åº
     For i = 0 To UBound(objarr) - 1
         For j = i + 1 To UBound(objarr)
             If objarr(i, 1)(0) > objarr(j, 1)(0) Then
@@ -129,7 +129,7 @@ Public Function sortBRATTxy(ByRef objarr() As Variant, ByVal offsety)
             End If
         Next j
     Next i
-    '¶ş´ÎÅÅĞò
+    'äºŒæ¬¡æ’åº
     For i = 0 To UBound(objarr) - 1
         For j = i + 1 To UBound(objarr)
             If Abs(objarr(i, 1)(0) - objarr(j, 1)(0)) < offsety And objarr(i, 1)(1) < objarr(j, 1)(1) Then
@@ -157,7 +157,7 @@ Sub picN()
     
     picNum = "qp-dd-uu-09"
     i = 1
-    If InStr(1, picNum, "-") = 0 Then  'Èç¹û´«Èë×Ö·û´®ÖĞ²»°üº¬¡°-¡±
+    If InStr(1, picNum, "-") = 0 Then  'å¦‚æœä¼ å…¥å­—ç¬¦ä¸²ä¸­ä¸åŒ…å«â€œ-â€
         picNew = picNum
     Else
         pic = Split(picNum, "-")
