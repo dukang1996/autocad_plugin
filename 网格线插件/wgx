@@ -1,0 +1,142 @@
+Sub demo1()
+    On Error Resume Next
+    Dim objLayer As AcadLayer
+    Set objLayer = ThisDrawing.Layers.Add("网格线_蒙板") '添加图层
+    ThisDrawing.ActiveLayer = objLayer '设置为当前图层
+    
+    Dim pt1 As Variant
+    Dim pt2 As Variant
+    Dim ptMin_x As Double
+    Dim ptMax_x As Double
+    Dim ptMin_y As Double
+    Dim ptMax_y As Double
+    Dim ptMin(2) As Double
+    Dim ptMax(2) As Double
+    Dim offsetC As Integer
+    
+    '偏移量
+    offsetC = ThisDrawing.Utility.GetInteger("输入偏移量：")
+    
+    pt1 = ThisDrawing.Utility.GetPoint(, "选择区域第一点：")
+    pt2 = ThisDrawing.Utility.GetPoint(, "选择区域第二点（对角点）：")
+    
+    '获取最小点，和最大点
+    If pt1(0) < pt2(0) Then
+        ptMin_x = pt1(0): ptMax_x = pt2(0)
+    Else
+        ptMin_x = pt2(0): ptMax_x = pt1(0)
+    End If
+    If pt1(1) < pt2(1) Then
+        ptMin_y = pt1(1): ptMax_y = pt2(1)
+    Else
+        ptMin_y = pt2(1): ptMax_y = pt1(1)
+    End If
+    ptMin(0) = ptMin_x: ptMin(1) = ptMin_y: ptMax(0) = ptMax_x: ptMax(1) = ptMax_y
+    
+    '绘制横线
+    Dim ptY_start(2) As Double
+    Dim ptY_end(2) As Double
+    Dim Yadd As Double
+    Dim Ycount As Integer
+    Yadd = ptMin_y + offsetC
+    Ycount = 0
+    While Yadd < ptMax_y
+        Dim Y_line As AcadLine
+        ptY_start(0) = ptMin_x: ptY_end(0) = ptMax_x
+        ptY_start(1) = Yadd: ptY_end(1) = Yadd
+        Set Y_line = ThisDrawing.ModelSpace.AddLine(ptY_start, ptY_end)
+        Yadd = Yadd + offsetC
+        Ycount = Ycount + 1
+    Wend
+        
+    '标注横向数字
+    On Error Resume Next
+    Dim Yline_zero As AcadEntity
+    Dim pt As Variant
+    Dim ptZero As Variant
+    Dim ptZero_y As Double '零线的Y坐标
+    Dim startNum As Integer
+    Dim ptStart(2) As Double '起始标号坐标
+    Dim Y_num As AcadText
+    Dim height As Double
+    Dim S_text As String
+    Dim Y_text As String
+    Dim offset_text As Integer
+    
+    offset_text = ThisDrawing.Utility.GetInteger("输入数字标号偏移量：")
+    S_text = ThisDrawing.Utility.GetString(True, "输入横线标号起始字母：")
+    
+    ThisDrawing.Utility.GetEntity Yline_zero, pt, "选取横向零线："
+    If Yline_zero.EntityName <> "AcDbLine" Or Yline_zero.Angle <> 0 Then
+        MsgBox "请选择正确的图元"
+    Else
+        Yline_zero.color = acBlue
+        ptZero = Yline_zero.StartPoint
+        ptZero_y = ptZero(1)
+        startNum = ((ptMin_y + offsetC - ptZero_y) / offsetC) * offset_text
+        height = offsetC * 0.1
+        ptStart(0) = ptMin_x - height * 5
+        ptStart(1) = ptMin_y + offsetC - height * 0.5
+        
+        For i = 1 To Ycount
+            Y_text = S_text + "(" + CStr(startNum) + ")"
+            Set Y_num = ThisDrawing.ModelSpace.AddText(Y_text, ptStart, height)
+            ptStart(1) = ptStart(1) + offsetC
+            startNum = startNum + offset_text
+        Next i
+    End If
+    
+     '绘制纵线
+    Dim ptX_start(2) As Double
+    Dim ptX_end(2) As Double
+    Dim Xadd As Double
+    Dim Xcount As Integer
+    Xadd = ptMin_x + offsetC
+    Xcount = 0
+    While Xadd < ptMax_x
+        Dim X_line As AcadLine
+        ptX_start(1) = ptMin_y: ptX_end(1) = ptMax_y
+        ptX_start(0) = Xadd: ptX_end(0) = Xadd
+        Set X_line = ThisDrawing.ModelSpace.AddLine(ptX_start, ptX_end)
+        Xadd = Xadd + offsetC
+        Xcount = Xcount + 1
+    Wend
+    
+    '标注纵向数字
+    On Error Resume Next
+    Dim Xline_zero As AcadEntity
+    Dim ptZero_x As Double '零线的x坐标
+    Dim X_num As AcadText
+    Dim X_text As String
+    
+    S_text = ThisDrawing.Utility.GetString(True, "输入纵线标号起始字母：")
+    
+    ThisDrawing.Utility.GetEntity Xline_zero, pt, "选取纵向零线："
+    If Xline_zero.EntityName <> "AcDbLine" Or Xline_zero.Angle <> toAngle(90) Then
+        MsgBox "请选择正确的图元"
+    Else
+        Xline_zero.color = acBlue
+        ptZero = Xline_zero.StartPoint
+        ptZero_x = ptZero(0)
+        startNum = ((ptMin_x + offsetC - ptZero_x) / offsetC) * offset_text
+        ptStart(1) = ptMin_y - height * 1.3
+        ptStart(0) = ptMin_x + offsetC - height
+        
+        For i = 1 To Xcount
+            X_text = S_text + "(" + CStr(startNum) + ")"
+            Set X_num = ThisDrawing.ModelSpace.AddText(X_text, ptStart, height)
+            ptStart(0) = ptStart(0) + offsetC
+            startNum = startNum + offset_text
+        Next i
+    End If
+    
+End Sub
+
+Function toAngle(ByVal d As Single) As Double
+    Dim pi
+    Dim angels As Double
+    pi = 4 * Atn(1)
+    
+    toAngle = d * pi / 180
+    
+End Function
